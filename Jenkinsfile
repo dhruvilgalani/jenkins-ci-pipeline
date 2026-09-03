@@ -9,20 +9,28 @@ pipeline {
         }
         stage('Build') {
             steps {
-                echo 'Building the project...'
-                sh 'npm install'   
+                echo 'Verifying Python is available...'
+                sh 'python3 --version'
             }
         }
         stage('Test') {
             steps {
-                echo 'Running tests...'
-                sh 'npm test'   
+                echo 'Running the app...'
+                sh 'python3 app.py'
             }
         }
         stage('Validation') {
             steps {
-                echo 'Running validation checks...'
-                sh 'npm run lint'   
+                echo 'Validating output...'
+                sh '''
+                    OUTPUT=$(python3 app.py)
+                    echo "Got: $OUTPUT"
+                    if [ "$OUTPUT" != "Hello World" ]; then
+                        echo "Validation failed: unexpected output"
+                        exit 1
+                    fi
+                    echo "Validation passed"
+                '''
             }
         }
     }
