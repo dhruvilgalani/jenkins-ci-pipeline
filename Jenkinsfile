@@ -10,7 +10,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Verifying Python is available...'
-                sh 'python3 --version'
+                sh 'which python3 && python3 --version'
             }
         }
         stage('Test') {
